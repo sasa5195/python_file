@@ -1,25 +1,29 @@
+#! python3
+# combinePdfs.py - Combines all the PDFs in the current working directory into 
+# a single PDF.
+
 import PyPDF2, os
 
+# Get all the PDF filenames.
 pdfFiles = []
-for filename in os.listdir('C:/Users/sbaid/Documents/Books'):
+for filename in os.listdir('./CHIP PROCESS FLOW'):
     if filename.endswith('.pdf'):
         pdfFiles.append(filename)
 pdfFiles.sort()
 
 pdfWriter = PyPDF2.PdfFileWriter()
-f=open("C:/Users/sbaid/Documents/Books/manifest_all_in_one.txt","w")
-tbl_hdr="FileName".center(100)+" "+"Page".center(100)
-f.write(tbl_hdr+"\n")
-r=1
+
+# Loop through all the PDF files.
 for filename in pdfFiles:
-    pdfFileObj = open('C:/Users/sbaid/Documents/Books/'+filename, 'rb')
+    pdfFileObj = open(filename, 'rb')
     pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-    f.write(filename.center(100)+" "+str(r).center(100)+"\n")
-    r=r+pdfReader.numPages
+
+    # Loop through all the pages (except the first) and add them.
     for pageNum in range(0, pdfReader.numPages):
         pageObj = pdfReader.getPage(pageNum)
         pdfWriter.addPage(pageObj)
-f.close()
-pdfOutput = open('C:/Users/sbaid/Documents/Books/all_in_one.pdf', 'wb')
+
+# Save the resulting PDF to a file.
+pdfOutput = open('combined.pdf', 'wb')
 pdfWriter.write(pdfOutput)
 pdfOutput.close()
